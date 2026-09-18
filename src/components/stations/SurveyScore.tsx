@@ -27,7 +27,7 @@ export function SurveyScore({
              ถ้าปล่อยเป็นตัวเลขลอย ๆ มันจะไปอ่านต่อกับราคาที่อยู่ข้าง ๆ เป็น "4.8 ฿7.50" */
           /* ตัวเลขใช้สีข้อความปกติ ไม่ใช่สีเหลืองตามดาว เพราะเหลืองบนพื้นครีม
              ในธีมสว่างมีคอนทราสต์ราว 2:1 อ่านไม่ออก ให้ดาวเป็นตัวถือสีไว้พอ */
-          "inline-flex items-center gap-1 rounded-full bg-warn-soft px-2 py-1 text-[0.75rem] text-fg",
+          "inline-flex items-center gap-1 rounded-full bg-warn-soft px-2 py-1 text-[0.6875rem] text-fg sm:text-[0.75rem]",
           className,
         )}
       >

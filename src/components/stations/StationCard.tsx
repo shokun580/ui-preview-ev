@@ -94,27 +94,27 @@ export function StationCard({
       </div>
 
       <div className="min-w-0 flex-1">
-        {/* ชื่อกินเต็มบรรทัด ไม่แบ่งที่ให้อย่างอื่น เพราะในแผงกว้าง 20rem
-            พอมีอะไรมาแย่งที่ ชื่อจะโดนตัดตั้งแต่คำที่สองจนแยกสถานีไม่ออก */}
-        <p className="truncate text-[0.9375rem] font-bold leading-snug text-fg">
-          {station.name}
-        </p>
-
-        <div className="mt-0.5 flex items-center gap-2">
-          <p className="t-caption flex min-w-0 flex-1 items-center gap-1 truncate">
-            <Icon name="mapPin" size={13} className="shrink-0" />
-            {province?.name}
-            {distance !== undefined && (
-              <>
-                <span className="opacity-40">·</span>
-                <span className="font-bold text-brand">{formatKm(distance)}</span>
-              </>
-            )}
+        {/* คะแนนปักมุมบนขวาเสมอ ชื่อยาวแค่ไหนก็ยอมให้ตัดเอา
+            ถ้าปล่อยให้คะแนนไหลไปอยู่บรรทัดอื่น ตำแหน่งจะไม่ตรงกันทั้งรายการ */}
+        <div className="flex items-start gap-2">
+          <p className="min-w-0 flex-1 truncate text-[0.875rem] font-bold leading-snug text-fg sm:text-[0.9375rem]">
+            {station.name}
           </p>
           <SurveyScore score={station.rating} className="shrink-0" />
         </div>
 
-        <p className="t-caption mt-1 flex items-center gap-1.5 truncate">
+        <p className="t-caption mt-0.5 flex items-center gap-1 truncate text-[0.75rem] sm:text-[0.8125rem]">
+          <Icon name="mapPin" size={13} className="shrink-0" />
+          {province?.name}
+          {distance !== undefined && (
+            <>
+              <span className="opacity-40">·</span>
+              <span className="font-bold text-brand">{formatKm(distance)}</span>
+            </>
+          )}
+        </p>
+
+        <p className="t-caption mt-1 flex items-center gap-1.5 truncate text-[0.75rem] sm:text-[0.8125rem]">
           <Icon name="bolt" size={13} className="shrink-0 text-brand" />
           <span className="font-bold text-fg">{maxKw(station)} kW</span>
           <span className="opacity-40">·</span>
@@ -136,10 +136,10 @@ export function StationCard({
               </li>
             ))}
             {rest > 0 && (
-              <li className="shrink-0 text-[0.75rem] text-fg-faint">+{rest}</li>
+              <li className="shrink-0 text-[0.6875rem] text-fg-faint sm:text-[0.75rem]">+{rest}</li>
             )}
           </ul>
-          <span className="t-caption shrink-0 font-bold text-fg">
+          <span className="t-caption shrink-0 font-bold text-fg text-[0.75rem] sm:text-[0.8125rem]">
             ฿{station.pricePerKwh.toFixed(2)}/หน่วย
           </span>
         </div>
