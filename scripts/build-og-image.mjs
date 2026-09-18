@@ -3,25 +3,36 @@
  *
  *   node scripts/build-og-image.mjs
  *
+ * ต้องเตรียมเครื่องก่อน 2 อย่าง:
+ *   brew install librsvg
+ *   cp src/assets/fonts/*.ttf ~/Library/Fonts/ && fc-cache -f
+ *
  * ทำไมไม่ใช้ตัวสร้างรูปของ Next (next/og):
  *   ตัวนั้นวาง "วรรณยุกต์ที่ซ้อนบนสระ" ของภาษาไทยไม่ได้
  *   คำว่า "ที่" ออกมาเป็น "ที" และ "ตั้ง" ออกมาเป็น "ตัง" ซึ่งอ่านผิดความหมาย
  *   จึงเปลี่ยนมาวาดด้วย rsvg-convert ที่จัดรูปอักษรไทยได้ถูกต้อง
  *
+ * ทำไมต้องติดตั้งฟอนต์ลงเครื่อง:
+ *   rsvg-convert บน macOS "ไม่สนใจ" ตัวแปร FONTCONFIG_FILE
+ *   (ทดสอบแล้ว: ชี้ไปโฟลเดอร์ที่ไม่มีฟอนต์เลย มันก็ยังวาดไทยออกมาได้เหมือนเดิมเป๊ะ)
+ *   จะชี้ให้มันอ่านฟอนต์จากในโปรเจกต์โดยตรงไม่ได้ ต้องให้ฟอนต์อยู่ในระบบเท่านั้น
+ *   โค้ดข้างล่างจึงมีด่านตรวจไว้ กันไม่ให้สร้างรูปด้วยฟอนต์ผิดโดยไม่รู้ตัว
+ *
  * ผลลัพธ์เป็นไฟล์นิ่ง เก็บลง git ไปเลย ไม่ต้องสร้างตอน deploy
  * (เครื่อง deploy ไม่มี rsvg-convert) รันสคริปต์นี้ใหม่เมื่อเปลี่ยนโลโก้หรือข้อความเท่านั้น
- *
- * ต้องมี rsvg-convert ก่อน:  brew install librsvg
  */
 
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, writeFileSync, readFileSync, rmSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const fontDir = join(root, "src/assets/fonts");
 const out = join(root, "public/og.png");
+
+const FONT = "LINE Seed Sans TH";
 
 const HEADLINE_1 = "ชาร์จที่ไหนก็ได้";
 const HEADLINE_2 = "ติดตั้งที่บ้านคุณก็ได้";
@@ -68,58 +79,58 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
       <path d="${ring}" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".62"/>
       <path d="${bolt}" fill="#fff"/>
     </g>
-    <text x="108" y="35" font-family="LINE Seed Sans TH" font-weight="800" font-size="27"
+    <text x="108" y="35" font-family="${FONT}" font-weight="800" font-size="27"
           letter-spacing="6.5" fill="#ffffff" fill-opacity="0.88">RECHARGER</text>
-    <text x="108" y="74" font-family="LINE Seed Sans TH" font-weight="800" font-size="36"
+    <text x="108" y="74" font-family="${FONT}" font-weight="800" font-size="36"
           letter-spacing="1" fill="#2EB4E0">ENERGY</text>
   </g>
 
-  <text x="80" y="352" font-family="LINE Seed Sans TH" font-weight="800" font-size="74" fill="#ffffff">${HEADLINE_1}</text>
-  <text x="80" y="456" font-family="LINE Seed Sans TH" font-weight="800" font-size="74" fill="#4FC9A8">${HEADLINE_2}</text>
+  <text x="80" y="352" font-family="${FONT}" font-weight="800" font-size="74" fill="#ffffff">${HEADLINE_1}</text>
+  <text x="80" y="456" font-family="${FONT}" font-weight="800" font-size="74" fill="#4FC9A8">${HEADLINE_2}</text>
 
   <line x1="80" y1="520" x2="1120" y2="520" stroke="#ffffff" stroke-opacity="0.14"/>
-  <text x="80" y="566" font-family="LINE Seed Sans TH" font-weight="400" font-size="26"
+  <text x="80" y="566" font-family="${FONT}" font-weight="400" font-size="26"
         fill="#ffffff" fill-opacity="0.62">${FOOTNOTE.join("   ·   ")}</text>
 </svg>`;
 
 const tmp = mkdtempSync(join(tmpdir(), "rc-og-"));
-try {
-  const svgPath = join(tmp, "og.svg");
-  const confPath = join(tmp, "fonts.conf");
-  writeFileSync(svgPath, svg);
-  // ชี้ fontconfig มาที่ฟอนต์ในโปรเจกต์ จะได้ไม่ต้องไปติดตั้งฟอนต์ลงเครื่อง
-  writeFileSync(
-    confPath,
-    `<?xml version="1.0"?>
-<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
-<fontconfig>
-  <dir>${fontDir}</dir>
-  <cachedir>${join(tmp, "cache")}</cachedir>
-</fontconfig>`,
-  );
-
-  // กันพลาดเงียบ ๆ: ถ้า fontconfig หาชื่อฟอนต์ไม่เจอ rsvg-convert จะไม่ error
-  // แต่จะไปหยิบฟอนต์ไทยตัวอื่นของเครื่องมาใช้แทน (บนแมคคือ Tahoma) ซึ่งหน้าตาคนละเรื่อง
-  // กับทั้งเว็บ และเราจะไม่รู้เลยจนกว่าจะเปิดรูปดูเอง จึงเช็กให้แน่ก่อนว่า resolve ถูกตัว
-  const env = { ...process.env, FONTCONFIG_FILE: confPath };
-  const matched = execFileSync("fc-match", ["--format=%{file}", "LINE Seed Sans TH"], {
-    env,
-    encoding: "utf8",
-  }).trim();
-  if (!/LINESeedSansTH/.test(matched)) {
-    throw new Error(
-      `fontconfig หา "LINE Seed Sans TH" ไม่เจอ — ได้ ${matched} มาแทน\n` +
-        `ตรวจว่ามีไฟล์ .ttf ครบใน ${fontDir}\n` +
-        `(fontconfig อ่าน .woff2 ไม่ได้ จึงใช้ไฟล์ชุดเดียวกับที่เว็บโหลดใน public/fonts ไม่ได้)`,
-    );
-  }
-  console.log(`ฟอนต์ที่ใช้: ${matched}`);
-
-  execFileSync("rsvg-convert", ["-w", "1200", "-h", "630", svgPath, "-o", out], {
-    env,
+const render = (source, target) => {
+  const svgPath = join(tmp, `${target}.svg`);
+  const pngPath = join(tmp, `${target}.png`);
+  writeFileSync(svgPath, source);
+  execFileSync("rsvg-convert", ["-w", "1200", "-h", "630", svgPath, "-o", pngPath], {
     stdio: "inherit",
   });
-  console.log("สร้างแล้ว: public/og.png (1200×630)");
+  return pngPath;
+};
+
+try {
+  /* ด่านตรวจฟอนต์ — เทียบผลวาดของ "ชื่อฟอนต์จริง" กับ "ชื่อฟอนต์ที่ไม่มีอยู่จริง"
+     ถ้าได้ภาพเหมือนกันเป๊ะ แปลว่าชื่อจริงก็ถูก fallback เหมือนกัน คือยังไม่ได้ติดตั้ง
+     เช็กจากผลลัพธ์แบบนี้เพราะพึ่ง fc-match ไม่ได้ — fc-match ตอบถูกได้ทั้งที่ rsvg ใช้ฟอนต์อื่น */
+  const probe = (family) =>
+    createHash("sha1")
+      .update(
+        readFileSync(
+          render(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><text x="20" y="100" font-family="${family}" font-weight="800" font-size="74">${HEADLINE_1}</text></svg>`,
+            family === FONT ? "probe-real" : "probe-missing",
+          ),
+        ),
+      )
+      .digest("hex");
+
+  if (probe(FONT) === probe("__rc_font_not_installed__")) {
+    throw new Error(
+      `rsvg-convert หา "${FONT}" ในเครื่องไม่เจอ กำลังจะวาดด้วยฟอนต์ไทยของ macOS แทน\n\n` +
+        `ติดตั้งก่อนแล้วรันใหม่:\n` +
+        `  cp ${fontDir}/*.ttf ~/Library/Fonts/ && fc-cache -f\n`,
+    );
+  }
+
+  const png = render(svg, "og");
+  writeFileSync(out, readFileSync(png));
+  console.log("สร้างแล้ว: public/og.png (1200×630) — ฟอนต์ถูกต้อง");
 } finally {
   rmSync(tmp, { recursive: true, force: true });
 }
