@@ -1,0 +1,582 @@
+@import "tailwindcss";
+
+/* เปิดโหมดมืดด้วยคลาส .dark บน <html> (ค่าเริ่มต้นอ่านจากระบบ แล้วผู้ใช้สลับเองได้) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ────────────────────────────────────────────────
+   1. BRAND PRIMITIVES — ดูดค่าจากไฟล์โลโก้ Recharger Energy
+   ──────────────────────────────────────────────── */
+:root {
+  --rc-mint-50:  #eefbf6;
+  --rc-mint-100: #d3f5e9;
+  --rc-mint-200: #a8ebd6;
+  --rc-mint-300: #74dcbe;
+  --rc-mint-400: #4fc9a8;  /* ← Mint หลัก (ปลายซ้ายของ gradient ในโลโก้) */
+  --rc-mint-500: #2fae8e;
+  --rc-mint-600: #1f8b72;
+  --rc-mint-700: #1b6e5c;
+
+  --rc-cyan-50:  #ecf9fe;
+  --rc-cyan-100: #d0f0fb;
+  --rc-cyan-200: #a3e2f7;
+  --rc-cyan-300: #63cdef;
+  --rc-cyan-400: #2eb4e0;
+  --rc-cyan-500: #0fa3ce;  /* ← Cyan หลัก (คำว่า ENERGY ในโลโก้) */
+  --rc-cyan-600: #0a83a8;
+  --rc-cyan-700: #0b6786;
+
+  --rc-ink-950: #060f18;
+  --rc-ink-900: #0b1e2d;   /* ← Deep Ink (พื้น section มืด / ตัวอักษรหลัก) */
+  --rc-ink-800: #123044;
+  --rc-ink-700: #1d4459;
+  --rc-ink-600: #2f5a72;
+  --rc-ink-500: #4a7590;
+  --rc-ink-400: #7898ad;
+  --rc-ink-300: #a7bccc;
+  --rc-ink-200: #cddae4;
+  --rc-ink-100: #e5edf3;
+  --rc-ink-50:  #f4f8fb;
+
+  --rc-amber: #e8a33d;
+  --rc-red:   #e2564d;
+
+  --rc-gradient: linear-gradient(100deg, var(--rc-mint-400) 0%, var(--rc-cyan-500) 100%);
+
+  /* ที่ว่างที่แถบเมนูล่างบนมือถือกินไป = ความสูงการ์ด 4.25rem + ระยะขอบล่าง 0.75rem
+     ใช้ร่วมกันระหว่างตัวแถบเองกับที่ว่างที่แต่ละหน้าต้องเผื่อไว้ไม่ให้เนื้อหาโดนทับ
+     ถ้าจะเปลี่ยนขนาดแถบ ต้องแก้ที่นี่ที่เดียว */
+  --rc-dock-h: 5rem;
+}
+
+/* ────────────────────────────────────────────────
+   2. SEMANTIC TOKENS — โหมดสว่าง
+   ──────────────────────────────────────────────── */
+:root {
+  --bg:            #ffffff;
+  --bg-subtle:     var(--rc-ink-50);
+  --bg-inverse:    var(--rc-ink-900);
+  --surface:       #ffffff;
+  --surface-hover: var(--rc-ink-50);
+  --surface-sunken: var(--rc-ink-100);
+
+  --fg:            var(--rc-ink-900);
+  --fg-muted:      var(--rc-ink-600);
+  --fg-faint:      var(--rc-ink-500);
+  --fg-inverse:    #ffffff;
+
+  --border:        var(--rc-ink-200);
+  --border-strong: var(--rc-ink-300);
+
+  --brand:         var(--rc-cyan-500);
+  --brand-hover:   var(--rc-cyan-600);
+  --brand-soft:    var(--rc-cyan-50);
+  --brand-soft-fg: var(--rc-cyan-700);
+
+  --accent:        var(--rc-mint-500);
+  --accent-soft:   var(--rc-mint-50);
+  --accent-soft-fg: var(--rc-mint-700);
+
+  --ring:          var(--rc-cyan-400);
+
+  --ok:      var(--rc-mint-500);
+  --ok-soft: var(--rc-mint-50);
+  --warn:      var(--rc-amber);
+  --warn-soft: #fdf4e6;
+  --danger:      var(--rc-red);
+  --danger-soft: #fdeceb;
+
+  --shadow-sm: 0 1px 2px rgba(11, 30, 45, 0.06), 0 1px 3px rgba(11, 30, 45, 0.04);
+  --shadow-md: 0 4px 12px rgba(11, 30, 45, 0.07), 0 2px 4px rgba(11, 30, 45, 0.04);
+  --shadow-lg: 0 16px 40px rgba(11, 30, 45, 0.10), 0 4px 12px rgba(11, 30, 45, 0.05);
+  --shadow-brand: 0 8px 24px rgba(15, 163, 206, 0.24);
+
+  --map-land:      var(--rc-ink-100);
+  --map-land-edge: var(--rc-ink-300);
+
+  color-scheme: light;
+}
+
+/* ────────────────────────────────────────────────
+   3. SEMANTIC TOKENS — โหมดมืด
+   ──────────────────────────────────────────────── */
+.dark {
+  --bg:            var(--rc-ink-950);
+  --bg-subtle:     #0a1622;
+  --bg-inverse:    #ffffff;
+  --surface:       #0e2233;
+  --surface-hover: #143049;
+  --surface-sunken: #081420;
+
+  --fg:            #eaf3f9;
+  --fg-muted:      var(--rc-ink-300);
+  --fg-faint:      var(--rc-ink-400);
+  --fg-inverse:    var(--rc-ink-900);
+
+  --border:        #1b3d55;
+  --border-strong: #2a5674;
+
+  --brand:         var(--rc-cyan-300);
+  --brand-hover:   var(--rc-cyan-200);
+  --brand-soft:    rgba(15, 163, 206, 0.16);
+  --brand-soft-fg: var(--rc-cyan-200);
+
+  --accent:        var(--rc-mint-300);
+  --accent-soft:   rgba(79, 201, 168, 0.16);
+  --accent-soft-fg: var(--rc-mint-200);
+
+  --ring:          var(--rc-cyan-300);
+
+  --ok:      var(--rc-mint-300);
+  --ok-soft: rgba(79, 201, 168, 0.16);
+  --warn:      #f0bb6a;
+  --warn-soft: rgba(232, 163, 61, 0.18);
+  --danger:      #f08079;
+  --danger-soft: rgba(226, 86, 77, 0.18);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.6);
+  --shadow-brand: 0 8px 28px rgba(15, 163, 206, 0.34);
+
+  --map-land:      #123044;
+  --map-land-edge: #2a5674;
+
+  color-scheme: dark;
+}
+
+/* ────────────────────────────────────────────────
+   4. เชื่อม token เข้ากับ utility ของ Tailwind
+   ──────────────────────────────────────────────── */
+@theme inline {
+  --font-sans: var(--font-line-seed), system-ui, sans-serif;
+
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-bg-inverse: var(--bg-inverse);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-sunken: var(--surface-sunken);
+
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-fg-inverse: var(--fg-inverse);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-soft-fg: var(--brand-soft-fg);
+
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-fg: var(--accent-soft-fg);
+
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --color-ring: var(--ring);
+
+  --shadow-card: var(--shadow-sm);
+  --shadow-card-hover: var(--shadow-md);
+  --shadow-pop: var(--shadow-lg);
+  --shadow-brand: var(--shadow-brand);
+
+  --radius-card: 1rem;
+  --radius-panel: 1.5rem;
+}
+
+/* ────────────────────────────────────────────────
+   5. BASE
+   ──────────────────────────────────────────────── */
+@layer base {
+  * { border-color: var(--border); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-line-seed), system-ui, sans-serif;
+    font-weight: 400;
+    /* ภาษาไทยต้องการ line-height สูงกว่าอังกฤษเพราะมีสระบน–ล่าง */
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--rc-cyan-200);
+    color: var(--rc-ink-900);
+  }
+
+  input, textarea, select, button { font: inherit; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ────────────────────────────────────────────────
+   6. TYPOGRAPHY SCALE
+   ──────────────────────────────────────────────── */
+@layer components {
+  /* ── น้ำหนักตัวอักษร ──
+     ฟอนต์ไทยที่น้ำหนัก 700 ขึ้นไปดูหนากว่าอังกฤษที่น้ำหนักเดียวกันมาก
+     เพราะเส้นหนาขึ้นแล้วช่องว่างในหัวอักษรแคบลง อ่านยาวแล้วล้าตา
+     จึงใช้ 800 เฉพาะหัวเรื่องใหญ่สุด ที่เหลือลงมาเป็น 700 และ 400
+     ส่วนการเน้นระดับกลาง ใช้ "สี" แทน "น้ำหนัก" */
+  .t-display {
+    font-size: clamp(2.25rem, 1.35rem + 3.9vw, 4.6rem);
+    font-weight: 800;
+    /* ภาษาไทยมีสระบนซ้อนวรรณยุกต์ได้สองชั้น (เช่น "ที่" "ตั้ง")
+       ถ้าใช้ line-height แน่นแบบเว็บภาษาอังกฤษ บรรทัดจะชนกัน */
+    line-height: 1.3;
+    letter-spacing: -0.022em;
+  }
+  .t-h1 {
+    font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.018em;
+  }
+  .t-h2 {
+    font-size: clamp(1.5rem, 1.15rem + 1.5vw, 2.125rem);
+    font-weight: 700;
+    line-height: 1.38;
+    letter-spacing: -0.012em;
+  }
+  .t-h3 {
+    font-size: clamp(1.125rem, 1.03rem + 0.45vw, 1.375rem);
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: -0.006em;
+  }
+  .t-body-lg {
+    font-size: clamp(1.0625rem, 1.02rem + 0.22vw, 1.1875rem);
+    font-weight: 400;
+    line-height: 1.8;
+  }
+  .t-body {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.78;
+  }
+  .t-body-sm {
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+  .t-caption {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--fg-faint);
+  }
+  .t-button {
+    font-size: 0.9375rem;
+    font-weight: 700; /* ปุ่มยังต้องหนา เพราะเป็นข้อความสั้นและต้องเด่นกว่าเนื้อหารอบ ๆ */
+    line-height: 1.2;
+    letter-spacing: 0.002em;
+  }
+  /* เมนูปกติใช้น้ำหนักธรรมดา แล้วให้ตัวที่เลือกอยู่เป็นตัวหนา
+     จะได้เห็นความต่างชัดกว่าการทำให้หนาทั้งแถบ */
+  .t-nav {
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .t-overline {
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .t-num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+}
+
+/* ────────────────────────────────────────────────
+   7. UTILITIES
+   ──────────────────────────────────────────────── */
+/* ตัวอักษรไล่สี
+   background-clip: text จะวาดสีเฉพาะในกรอบกล่องของ element
+   ภาษาไทยมีสระบนซ้อนวรรณยุกต์ที่ยื่นพ้นกรอบบรรทัดขึ้นไป ส่วนที่ยื่นออกไปจึงไม่ถูกวาดสี
+   แล้วดูเหมือนวรรณยุกต์ถูกตัดหายหรือโดนบรรทัดบนทับ
+   แก้ด้วยการยืดกรอบขึ้น-ลงด้วย padding แล้วดึงกลับด้วย margin ติดลบ
+   กรอบจึงใหญ่พอครอบวรรณยุกต์ โดยที่ระยะในเลย์เอาต์ไม่เปลี่ยน */
+@utility brand-gradient-text {
+  background: var(--rc-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-block: 0.22em;
+  margin-block: -0.22em;
+}
+
+@utility brand-gradient-bg {
+  background: var(--rc-gradient);
+}
+
+@utility shell {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (min-width: 640px) { padding-inline: 1.5rem; }
+  @media (min-width: 1024px) { padding-inline: 2rem; }
+  /* จอ 1536px ขึ้นไป ถ้ายังคุมไว้ที่ 76rem เนื้อหาจะกระจุกกลางจอ
+     แล้วเหลือที่ว่างสองข้างเยอะจนหน้าดูโล่ง */
+  @media (min-width: 1536px) {
+    max-width: 88rem;
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* ────────────────────────────────────────────────
+   8. ANIMATION — ละมุน มีจุดประสงค์ ไม่รบกวนการอ่าน
+   ──────────────────────────────────────────────── */
+@keyframes rc-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes rc-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes rc-slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: none; }
+}
+@keyframes rc-shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position: 400px 0; }
+}
+@keyframes rc-pulse-ring {
+  0%   { transform: scale(0.75); opacity: 0.7; }
+  70%  { transform: scale(2.1); opacity: 0; }
+  100% { transform: scale(2.1); opacity: 0; }
+}
+
+/* ใช้ fill-mode เป็น backwards ไม่ใช่ both โดยตั้งใจ
+   เพราะ "both" ทำให้อนิเมชันยังมีผลอยู่หลังเล่นจบ ซึ่งทำให้ element นี้
+   กลายเป็น stacking context ถาวร แล้วไปกด panel ที่เป็น position: fixed
+   ให้ไปอยู่ใต้ header ของเว็บ */
+.rc-page-enter { animation: rc-fade-in 200ms ease-out backwards; }
+
+.rc-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-sunken) 0%,
+    var(--surface-hover) 40%,
+    var(--surface-sunken) 80%
+  );
+  background-size: 800px 100%;
+  animation: rc-shimmer 1.4s linear infinite;
+}
+
+/* จุดเริ่มต้นของ element ที่จะ reveal ตอน scroll — ตั้งไว้ที่ CSS
+   เพื่อไม่ให้เกิดอาการกระพริบก่อน JS ทำงาน */
+.rc-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rc-reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rc-reveal { opacity: 1; transform: none; }
+}
+
+/* ────────────────────────────────────────────────
+   9. แผนที่
+   ──────────────────────────────────────────────── */
+
+/* เฉพาะมือถือ — ที่ว่างด้านล่างของแผนที่ผูกกับความสูงจริงของแผ่นเลื่อน
+   ลากแผ่นลง แผนที่ขยายตามทันที ไม่ใช่ค่าคงที่ที่ทิ้งที่ว่างเปล่า ๆ ไว้
+   ต้องเขียนเป็น media query ไม่ใช่ inline style เพราะ inline จะไปทับ padding ของ md/lg ด้วย */
+@media (max-width: 47.99rem) {
+  .rc-map-frame {
+    padding-bottom: calc(var(--rc-sheet-h, 50%) * 0.55);
+  }
+}
+
+/* ไฮไลต์ทั้งภาคตอนเอาเมาส์ชี้ ทำด้วย CSS ล้วนเพื่อไม่ต้องให้ React
+   วาดจังหวัดทั้ง 77 รูปใหม่ทุกครั้งที่เมาส์ขยับ */
+.rc-region path {
+  transition: filter 160ms ease-out;
+}
+.rc-region--hot:hover path {
+  filter: brightness(0.93) saturate(1.15);
+}
+@media (hover: none) {
+  .rc-region--hot:hover path { filter: none; }
+}
+
+/* ────────────────────────────────────────────────
+   10. เอฟเฟกต์สมัยใหม่สำหรับ Hero
+   ทำเองด้วย CSS ล้วน ไม่ได้ลงไลบรารีอนิเมชันเพิ่ม
+   เพื่อให้คุมจังหวะและความแรงได้เอง และไม่เพิ่มขนาดบันเดิล
+   ──────────────────────────────────────────────── */
+
+/* ป้ายข้อความที่ค่อย ๆ ชัดขึ้นทีละวรรค
+   ภาษาไทยไม่เว้นวรรคระหว่างคำ จึงไล่ทีละวรรคไม่ใช่ทีละตัวอักษร
+   เพราะการตัดกลางคำจะทำให้สระและวรรณยุกต์หลุดจากพยัญชนะ */
+@keyframes rc-blur-in {
+  from { opacity: 0; filter: blur(10px); transform: translateY(12px); }
+  to   { opacity: 1; filter: blur(0); transform: none; }
+}
+.rc-blur-in { animation: rc-blur-in 900ms cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+
+/* คำเดียวที่ไล่สีเคลื่อนช้า ๆ ใช้เน้นใจความสำคัญโดยไม่ต้องใช้สีจัด */
+@keyframes rc-aurora {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+.rc-aurora {
+  /* เหตุผลเดียวกับ brand-gradient-text — กันวรรณยุกต์ไทยถูกตัด */
+  padding-block: 0.22em;
+  margin-block: -0.22em;
+  background: linear-gradient(
+    100deg,
+    var(--rc-mint-400) 0%,
+    var(--rc-cyan-500) 35%,
+    var(--rc-mint-300) 65%,
+    var(--rc-cyan-500) 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rc-aurora 9s ease-in-out infinite;
+}
+
+/* แสงกวาดผ่านปุ่มช้า ๆ ทุก ๆ ไม่กี่วินาที ดึงสายตาโดยไม่กระพริบรบกวน */
+@keyframes rc-shine {
+  0%        { transform: translateX(-120%) skewX(-18deg); }
+  55%, 100% { transform: translateX(260%) skewX(-18deg); }
+}
+.rc-shine { position: relative; overflow: hidden; }
+.rc-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 42%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.42),
+    transparent
+  );
+  animation: rc-shine 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* เส้นแสงวิ่งรอบขอบการ์ด ความทึบต่ำ ให้รู้สึกว่าข้อมูลมีชีวิตแต่ไม่แย่งความสนใจ */
+@keyframes rc-beam { to { --rc-beam-angle: 360deg; } }
+@property --rc-beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.rc-beam {
+  position: relative;
+  isolation: isolate;
+}
+.rc-beam::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--rc-beam-angle),
+    transparent 0turn,
+    transparent 0.62turn,
+    var(--rc-mint-300) 0.78turn,
+    var(--rc-cyan-300) 0.86turn,
+    transparent 0.95turn
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rc-beam 6s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* แถบเลื่อนต่อเนื่องสำหรับโลโก้เครือข่าย หยุดเมื่อเอาเมาส์ชี้ */
+@keyframes rc-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.rc-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: rc-marquee var(--rc-marquee-duration, 38s) linear infinite;
+}
+.rc-marquee:hover .rc-marquee-track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-aurora,
+  .rc-shine::after,
+  .rc-beam::before,
+  .rc-marquee-track {
+    animation: none;
+  }
+  .rc-aurora { background-position: 30% 50%; }
+}
+
+/* แผงรายละเอียดสถานี
+   มือถือแผงอยู่ด้านล่าง จึงเลื่อนขึ้นมา
+   จอ md ขึ้นไปแผงอยู่ด้านซ้าย จึงเลื่อนเข้ามาจากทางซ้าย แบบเดียวกับ Google Maps
+   ทิศทางของอนิเมชันต้องตรงกับทิศที่แผงอยู่จริง ไม่งั้นจะรู้สึกว่าของกระโดดมาผิดทาง */
+@keyframes rc-slide-in-left {
+  from { transform: translateX(-100%); opacity: 0.6; }
+  to   { transform: none; opacity: 1; }
+}
+.rc-panel-enter {
+  animation: rc-slide-up 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (min-width: 48rem) {
+  .rc-panel-enter {
+    animation: rc-slide-in-left 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rc-panel-enter { animation: rc-fade-in 160ms ease-out both; }
+}

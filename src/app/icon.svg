@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    ไอคอนย่อของ Recharger Energy
+    เก็บสององค์ประกอบหลักของโลโก้ไว้ คือวงแหวนหมุนเวียนกับสายฟ้า
+    แต่ตัดรายละเอียดที่มองไม่เห็นตอนย่อเหลือ 16px ออก ได้แก่หัวลูกศรและสายฟ้าเส้นที่สอง
+    พื้นเป็นสี่เหลี่ยมมนไล่สีตามโลโก้ เพื่อให้เห็นตัวไอคอนชัดทั้งบนแท็บสว่างและแท็บมืด
+  -->
+  <defs>
+    <linearGradient id="rc" x1="6" y1="58" x2="58" y2="6" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4FC9A8"/>
+      <stop offset="1" stop-color="#0FA3CE"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#rc)"/>
+  <path d="M43.5 17.5A20 20 0 1 1 17.5 24" fill="none" stroke="#fff" stroke-width="5"
+        stroke-linecap="round" opacity=".62"/>
+  <path d="M38 14 21 35h9.5L27 51l17-22h-9.5z" fill="#fff"/>
+</svg>
