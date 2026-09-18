@@ -8,6 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { FooterSlot } from "@/components/layout/FooterSlot";
 import { BottomTab } from "@/components/layout/BottomTab";
 import { PageTransition } from "@/components/layout/PageTransition";
+import { OG_IMAGE } from "@/data/og";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -42,10 +43,13 @@ export const metadata: Metadata = {
     url: siteUrl,
     /* รูปนิ่งที่สร้างด้วย scripts/build-og-image.mjs
        ไม่ได้ใช้ตัวสร้างรูปของ Next เพราะมันวางวรรณยุกต์ที่ซ้อนบนสระของภาษาไทยไม่ได้
-       คำว่า "ที่" จะกลายเป็น "ที" และ "ตั้ง" จะกลายเป็น "ตัง" */
+       คำว่า "ที่" จะกลายเป็น "ที" และ "ตั้ง" จะกลายเป็น "ตัง"
+
+       OG_IMAGE มีแฮชของเนื้อไฟล์ต่อท้าย เพราะแอปแชตแคชรูปตาม URL
+       ถ้าใช้ /og.png เฉย ๆ แล้วทับไฟล์เดิม ปลายทางจะยังโชว์รูปเก่าต่อไปอีกหลายวัน */
     images: [
       {
-        url: "/og.png",
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: `${site.name} — ${site.tagline}`,
@@ -57,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${site.name} — ${site.tagline}`,
     description: site.description,
-    images: ["/og.png"],
+    images: [OG_IMAGE],
   },
 };
 

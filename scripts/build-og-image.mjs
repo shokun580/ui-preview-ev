@@ -31,6 +31,7 @@ import { join, resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const fontDir = join(root, "src/assets/fonts");
 const out = join(root, "public/og.png");
+const version = join(root, "src/data/og.ts");
 
 const FONT = "LINE Seed Sans TH";
 
@@ -128,9 +129,22 @@ try {
     );
   }
 
-  const png = render(svg, "og");
-  writeFileSync(out, readFileSync(png));
-  console.log("สร้างแล้ว: public/og.png (1200×630) — ฟอนต์ถูกต้อง");
+  const bytes = readFileSync(render(svg, "og"));
+  writeFileSync(out, bytes);
+
+  /* LINE / Facebook / X / Slack แคชข้อมูล OG ไว้ตาม "URL" ไม่ได้ดูว่าไฟล์เปลี่ยนไหม
+     ทับไฟล์เดิมที่ path เดิมจึงไม่มีผล ปลายทางยังโชว์รูปเก่าต่อไปอีกหลายวัน
+     (เจอมาแล้วตอนแก้ฟอนต์: ไฟล์บนเซิร์ฟเวอร์ถูกแล้ว แต่ LINE ยังโชว์ของเก่า)
+     จึงต่อท้าย URL ด้วยแฮชของเนื้อไฟล์ พอรูปเปลี่ยน URL ก็เปลี่ยนตาม
+     เขียนเป็นไฟล์ให้ layout.tsx อ่าน จะได้ไม่ต้องมาจำแก้เลขเวอร์ชันเองทุกครั้ง */
+  const hash = createHash("md5").update(bytes).digest("hex").slice(0, 8);
+  writeFileSync(
+    version,
+    `/* สร้างอัตโนมัติจาก scripts/build-og-image.mjs — อย่าแก้ด้วยมือ */\n` +
+      `export const OG_IMAGE = "/og.png?v=${hash}";\n`,
+  );
+
+  console.log(`สร้างแล้ว: public/og.png (1200×630) — ฟอนต์ถูกต้อง, v=${hash}`);
 } finally {
   rmSync(tmp, { recursive: true, force: true });
 }
