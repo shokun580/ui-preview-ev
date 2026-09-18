@@ -11,6 +11,7 @@ import {
   applyFilters,
   countActive,
   emptyFilters,
+  recommendScore,
   sortLabels,
   type Filters,
   type SortKey,
@@ -79,8 +80,8 @@ export function StationsExplorer({ initialProvince }: { initialProvince?: string
         sorted.sort((a, b) => b.station.rating - a.station.rating);
         break;
       default:
-        // แนะนำ = เรียงตามคะแนนที่ทีมสำรวจให้ไว้
-        sorted.sort((a, b) => b.station.rating - a.station.rating);
+        // แนะนำ = คะแนนทีมสำรวจผสมความเร็วและราคา (ดู recommendScore ใน filters.ts)
+        sorted.sort((a, b) => recommendScore(b.station) - recommendScore(a.station));
     }
     return sorted;
   }, [debounced, province, region, filters, sort, coords]);

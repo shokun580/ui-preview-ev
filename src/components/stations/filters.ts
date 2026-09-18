@@ -1,5 +1,5 @@
 import type { AmenityId, ConnectorType, NetworkId, SpeedTier, Station } from "@/data/stations";
-import { connectorTypes, speedTier } from "@/data/stations";
+import { connectorTypes, maxKw, speedTier } from "@/data/stations";
 import { provinceById } from "@/data/geo";
 
 export type Filters = {
@@ -88,5 +88,19 @@ export const sortLabels: Record<SortKey, string> = {
   recommended: "แนะนำ",
   distance: "ใกล้ฉันที่สุด",
   price: "ราคาถูกที่สุด",
-  rating: "คะแนนสูงสุด",
+  rating: "คะแนนทีมสำรวจ",
 };
+
+/**
+ * คะแนนสำหรับตัวเลือก "แนะนำ" — ผสมสามอย่างที่ใช้ตัดสินใจจริงว่าจะแวะสถานีไหน
+ * ไม่รวมระยะทาง เพราะผู้ใช้อาจไม่ได้เปิด GPS แล้วลำดับจะสลับไปมาโดยไม่มีเหตุผลที่อธิบายได้
+ *
+ * แยกจากตัวเลือก "คะแนนทีมสำรวจ" ที่เรียงตามคะแนนล้วน ๆ อย่างเดียว
+ * ถ้าสองตัวนี้คิดเหมือนกัน การมีสองตัวเลือกก็ไม่มีความหมาย
+ */
+export function recommendScore(s: Station) {
+  const survey = s.rating; // 0–5 คะแนนที่ทีมสำรวจให้ไว้
+  const speed = Math.min(maxKw(s) / 150, 1) * 5; // 150 kW ขึ้นไปถือว่าเต็ม
+  const price = Math.min(Math.max((10 - s.pricePerKwh) / 5, 0), 1) * 5; // อิงช่วง 5–10 บาท
+  return survey * 0.5 + speed * 0.3 + price * 0.2;
+}

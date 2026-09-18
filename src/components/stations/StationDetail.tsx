@@ -20,6 +20,7 @@ import { AppLogo } from "@/components/ui/AppLogo";
 import { Badge } from "@/components/ui/Badge";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { ButtonLink } from "@/components/ui/Button";
+import { SurveyScore } from "./SurveyScore";
 import { cn, formatKm } from "@/lib/utils";
 
 const nearbyIcon: Record<NearbyPlace["category"], IconName> = {
@@ -123,6 +124,8 @@ export function StationDetailBody({
               {station.hours}
             </Badge>
           </div>
+
+          <SurveyScore score={station.rating} variant="full" className="mt-4" />
 
           {/* สิ่งอำนวยความสะดวกอยู่เหนือปุ่ม เพราะเป็นข้อมูลที่ใช้ตัดสินใจ
               ว่าจะไปที่นี่ไหม ควรเห็นก่อนกดนำทาง ไม่ใช่ต้องเลื่อนลงไปหา */}

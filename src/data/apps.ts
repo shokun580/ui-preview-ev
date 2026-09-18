@@ -109,7 +109,7 @@ export const chargingApps: ChargingApp[] = [
   {
     id: "igreen",
     name: "iGreen+",
-    operator: "iGreen Energy",
+    operator: "iGreen Plus",
     tagline: "เน้นเส้นทางขนส่งและพื้นที่อุตสาหกรรม",
     color: "#5c940d",
     coverage: "ประมาณ 90+ สถานี",

@@ -15,6 +15,7 @@ import { provinceById } from "@/data/geo";
 import { AppLogo } from "@/components/ui/AppLogo";
 import { Badge } from "@/components/ui/Badge";
 import { Icon, type IconName } from "@/components/ui/Icon";
+import { SurveyScore } from "./SurveyScore";
 import { cn, formatKm } from "@/lib/utils";
 
 const amenityIcon: Record<string, IconName> = {
@@ -123,6 +124,7 @@ export function StationCard({
         {connectorTypes(station).slice(0, 2).map((c) => (
           <Badge key={c} tone="outline">{c}</Badge>
         ))}
+        <SurveyScore score={station.rating} />
         <span className="t-caption ml-auto font-bold text-fg">
           ฿{station.pricePerKwh.toFixed(2)}/หน่วย
         </span>
